@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import { adminDb } from './firebase-admin';
-import { crawlBunjangForGame } from './crawler';
+import { crawlBunjang } from './crawler';
 
 interface Game {
   id: string;
@@ -35,7 +35,7 @@ export function startPriceCrawlerScheduler() {
       for (const game of games) {
         try {
           console.log(`게임 "${game.name}" 크롤링 중...`);
-          await crawlBunjangForGame(game);
+          await crawlBunjang(game.name);
           
           // 크롤링 간격을 두어 서버 부하 방지
           await new Promise(resolve => setTimeout(resolve, 2000));
@@ -69,19 +69,19 @@ export async function runManualCrawling() {
     const games = gamesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    }));
+    })) as Game[];
 
     console.log(`총 ${games.length}개의 게임에 대해 가격 정보를 수집합니다.`);
 
-    for (const game of games) {
-      try {
-        console.log(`게임 "${game.name}" 크롤링 중...`);
-        await crawlBunjangForGame(game);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-      } catch (error) {
-        console.error(`게임 "${game.name}" 크롤링 실패:`, error);
+          for (const game of games) {
+        try {
+          console.log(`게임 "${game.name}" 크롤링 중...`);
+          await crawlBunjang(game.name);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        } catch (error) {
+          console.error(`게임 "${game.name}" 크롤링 실패:`, error);
+        }
       }
-    }
 
     console.log('수동 가격 크롤링 완료');
   } catch (error) {

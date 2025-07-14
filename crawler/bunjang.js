@@ -2,22 +2,14 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const admin = require('firebase-admin');
 
-// Firebase Admin SDK 초기화 (환경변수 사용)
+// Firebase Admin SDK 초기화 (serviceAccountKey.json 파일 사용)
 let adminDb = null;
 try {
-  // 환경변수에서 서비스 계정 정보 가져오기
-  const serviceAccount = {
-    type: "service_account",
-    project_id: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-    private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    client_email: process.env.FIREBASE_CLIENT_EMAIL,
-    client_id: process.env.FIREBASE_CLIENT_ID,
-    auth_uri: "https://accounts.google.com/o/oauth2/auth",
-    token_uri: "https://oauth2.googleapis.com/token",
-    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-    client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${process.env.FIREBASE_CLIENT_EMAIL}`
-  };
+  // serviceAccountKey.json 파일에서 서비스 계정 정보를 읽어옴
+  const fs = require('fs');
+  const path = require('path');
+  const serviceAccountPath = path.join(__dirname, 'serviceAccountKey.json');
+  const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
 
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -64,17 +56,35 @@ async function crawlBunjang(gameName) {
       console.log(`페이지 ${page} 크롤링 중...`);
       
       const url = `https://www.bunjang.co.kr/search/products?q=${encodeURIComponent(gameName)}&page=${page}`;
-      
-      try {
+    
+          try {
+        console.log(`URL 요청: ${url}`);
         const response = await axios.get(url, {
-          headers: {
+        headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-          },
-          timeout: 10000
-        });
+        },
+          timeout: 10000,
+          maxRedirects: 5,
+          validateStatus: function (status) {
+            return status >= 200 && status < 400; // 301, 302 리다이렉트 허용
+          }
+      });
+      
+        console.log(`응답 상태: ${response.status}`);
+        console.log(`응답 크기: ${response.data.length} bytes`);
+        console.log(`최종 URL: ${response.request.res.responseUrl || url}`);
+        
+        // 첫 페이지 HTML을 debug.html로 저장
+        if (page === 1) {
+          const fs = require('fs');
+          fs.writeFileSync('debug.html', response.data, 'utf8');
+          console.log('debug.html로 HTML 저장 완료');
+        }
         
         const $ = cheerio.load(response.data);
         const productElements = $('.sc-1xyd6f9-0');
+        
+        console.log(`찾은 상품 요소: ${productElements.length}개`);
         
         if (productElements.length === 0) {
           console.log(`마지막 페이지 도달 (${items.length}개)`);
@@ -125,12 +135,12 @@ async function crawlBunjang(gameName) {
         
       } catch (error) {
         console.error(`페이지 ${page} 크롤링 실패:`, error);
-        break;
-      }
+      break;
     }
-    
+  }
+  
     console.log(`총 ${items.length}개 매물 수집 완료`);
-    
+  
     if (items.length === 0) {
       console.log(`게임 "${gameName}"에 대한 상품을 찾을 수 없습니다.`);
       return null;
@@ -156,7 +166,7 @@ async function crawlBunjang(gameName) {
     const upperBound = q3 + 1.5 * iqr;
     
     const filteredPrices = prices.filter(price => price >= lowerBound && price <= upperBound);
-    console.log(`📊 극단값 제거: ${prices.length}개 → ${filteredPrices.length}개`);
+      console.log(`📊 극단값 제거: ${prices.length}개 → ${filteredPrices.length}개`);
     
     // 절사평균 계산 (추천가)
     const trimmedPrices = filteredPrices.sort((a, b) => a - b);

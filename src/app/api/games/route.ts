@@ -13,8 +13,8 @@ export async function GET() {
     
     gamesSnapshot.forEach((doc) => {
       games.push({
-        id: doc.id,
-        ...doc.data()
+      id: doc.id,
+      ...doc.data()
       });
     });
 

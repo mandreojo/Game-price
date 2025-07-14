@@ -1,140 +1,159 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import AutoComplete from "@/components/AutoComplete";
+import { GameCardSkeleton } from "@/components/ui/loading";
+import SearchHistory from "@/components/SearchHistory";
+import { useSearchHistory } from "@/hooks/useSearchHistory";
 
-interface GameData {
+interface GameCardData {
   id: string;
   name: string;
-  min_price?: number;
-  avg_price?: number;
-  max_price?: number;
-  recommended_price?: number;
-  count?: number;
-  updated_at?: string;
+  minPrice: number;
+  avgPrice: number;
+  maxPrice: number;
+  recommended: number;
+  tag: "인기" | "딱상" | "딱락";
 }
 
-export default function Home() {
-  const [games, setGames] = useState<GameData[]>([]);
-  const [loading, setLoading] = useState(true);
+const DUMMY_GAMES: GameCardData[] = [
+  {
+    id: "1",
+    name: "슈퍼 마리오 오디세이",
+    minPrice: 20000,
+    avgPrice: 35000,
+    maxPrice: 50000,
+    recommended: 30000,
+    tag: "인기",
+  },
+  {
+    id: "2",
+    name: "젤다의 전설 브레스 오브 더 와일드",
+    minPrice: 25000,
+    avgPrice: 40000,
+    maxPrice: 60000,
+    recommended: 35000,
+    tag: "딱상",
+  },
+  {
+    id: "3",
+    name: "마리오 카트 8 디럭스",
+    minPrice: 18000,
+    avgPrice: 32000,
+    maxPrice: 48000,
+    recommended: 29000,
+    tag: "딱락",
+  },
+  // ... 더미 데이터 추가 가능 ...
+];
 
+function GameCard({ game }: { game: GameCardData }) {
+  return (
+    <Link href={`/game/${encodeURIComponent(game.name)}`} className="block">
+      <div className="rounded-xl border bg-card shadow-sm p-4 mb-4 hover:shadow-md transition-shadow cursor-pointer">
+        <div className="font-bold text-lg mb-2 text-card-foreground">{game.name}</div>
+        <div className="flex justify-between text-xs mb-1">
+          <span className="text-blue-400 font-semibold">최저가<br/>{game.minPrice.toLocaleString()}원</span>
+          <span className="text-muted-foreground font-semibold">평균가<br/>{game.avgPrice.toLocaleString()}원</span>
+          <span className="text-red-400 font-semibold">최고가<br/>{game.maxPrice.toLocaleString()}원</span>
+        </div>
+        <div className="mt-2 bg-green-950/20 rounded-md py-2 text-center">
+          <span className="text-xs text-muted-foreground">추천 껨값</span><br/>
+          <span className="text-xl font-bold text-green-400">{game.recommended.toLocaleString()}원</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+export default function MainPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { addToHistory } = useSearchHistory();
+
+  // 검색 시 로딩 상태 관리
   useEffect(() => {
-    fetchGames();
-  }, []);
+    if (isLoading) {
+      const timer = setTimeout(() => setIsLoading(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
-  const fetchGames = async () => {
-    try {
-      const response = await fetch('/api/dashboard');
-      const data = await response.json();
-      
-      if (data.success && data.games) {
-        setGames(data.games);
-      }
-    } catch (error) {
-      console.error('게임 데이터 가져오기 실패:', error);
-    } finally {
-      setLoading(false);
+  // 게임 검색 처리
+  const handleSearch = (gameName: string) => {
+    if (gameName.trim()) {
+      setIsLoading(true);
+      addToHistory(gameName.trim());
+      router.push(`/game/${encodeURIComponent(gameName.trim())}`);
     }
   };
 
-  const formatPrice = (price: number) => {
-    return price.toLocaleString('ko-KR');
+  // 수동 검색 버튼 클릭
+  const handleSearchClick = () => {
+    if (searchQuery.trim()) {
+      setIsLoading(true);
+      handleSearch(searchQuery);
+    }
   };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ko-KR');
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">게임 데이터를 불러오는 중...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            🎮 번개장터 게임 가격
-          </h1>
-          <p className="text-lg text-gray-600">
-            Nintendo Switch 게임의 실시간 중고 가격을 확인하세요
-          </p>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {games.map((game) => (
-            <Link 
-              href={`/game/${encodeURIComponent(game.name)}`} 
-              key={game.id}
-              className="block"
+    <div className="min-h-screen flex flex-col items-center bg-background py-8 px-2">
+      <div className="w-full max-w-md bg-card rounded-2xl shadow-lg p-6 border">
+        <div className="mb-6">
+          <div className="font-extrabold text-3xl text-card-foreground mb-1">껨값</div>
+          <div className="text-muted-foreground text-sm mb-4">중고거래 눈탱이, 치지도 말고 맞지도 말자</div>
+          <div className="flex gap-2">
+            <AutoComplete
+              onSelect={handleSearch}
+              placeholder="게임명을 입력하세요"
+              className="flex-1"
+            />
+            <Button 
+              type="button" 
+              className="shrink-0"
+              onClick={handleSearchClick}
             >
-              <div className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                  {game.name}
-                </h2>
-                
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">최저가:</span>
-                    <span className="font-medium text-green-600">
-                      {game.min_price ? `${formatPrice(game.min_price)}원` : 'N/A'}
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">평균가:</span>
-                    <span className="font-medium text-blue-600">
-                      {game.avg_price ? `${formatPrice(game.avg_price)}원` : 'N/A'}
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">최고가:</span>
-                    <span className="font-medium text-red-600">
-                      {game.max_price ? `${formatPrice(game.max_price)}원` : 'N/A'}
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between border-t pt-3">
-                    <span className="text-gray-800 font-semibold">추천가:</span>
-                    <span className="font-bold text-purple-600">
-                      {game.recommended_price ? `${formatPrice(game.recommended_price)}원` : 'N/A'}
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="mt-4 text-sm text-gray-500">
-                  매물 수: {game.count || 0}개
-                  {game.updated_at && (
-                    <span className="block mt-1">
-                      업데이트: {formatDate(game.updated_at)}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {games.length === 0 && !loading && (
-          <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">
-              아직 게임 데이터가 없습니다.
-            </p>
-            <p className="text-gray-500 mt-2">
-              크롤러를 실행하여 데이터를 수집해주세요.
-            </p>
+              검색
+            </Button>
           </div>
+          
+          {/* 검색 히스토리 */}
+          <SearchHistory onSelect={handleSearch} className="mt-4" />
+        </div>
+        {/* 많이 찾은 게임 */}
+        <div className="mb-2 text-xs text-muted-foreground font-semibold">많이 찾은 게임</div>
+        {isLoading ? (
+          <>
+            <GameCardSkeleton />
+            <GameCardSkeleton />
+          </>
+        ) : (
+          DUMMY_GAMES.filter(g => g.tag === "인기").map(game => (
+            <GameCard key={game.id} game={game} />
+          ))
+        )}
+        {/* 딱상/딱락 타이틀 */}
+        <div className="mb-2 mt-6 text-xs text-muted-foreground font-semibold">딱상중인 타이틀</div>
+        {isLoading ? (
+          <GameCardSkeleton />
+        ) : (
+          DUMMY_GAMES.filter(g => g.tag === "딱상").map(game => (
+            <GameCard key={game.id} game={game} />
+          ))
+        )}
+        <div className="mb-2 mt-6 text-xs text-muted-foreground font-semibold">딱락중인 타이틀</div>
+        {isLoading ? (
+          <GameCardSkeleton />
+        ) : (
+          DUMMY_GAMES.filter(g => g.tag === "딱락").map(game => (
+            <GameCard key={game.id} game={game} />
+          ))
         )}
       </div>
     </div>
   );
-}
+} 
