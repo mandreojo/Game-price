@@ -1,308 +1,226 @@
 "use client";
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { useParams, useRouter } from "next/navigation";
-import { Home, Share2, Search, Loader2, RefreshCw } from "lucide-react";
 
-export default function GameDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const [search, setSearch] = React.useState("");
-  const [tab, setTab] = React.useState<"online" | "offline">("online");
-  const [copied, setCopied] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [gameData, setGameData] = React.useState<any>(null);
-  const [error, setError] = React.useState<string | null>(null);
-  const [page, setPage] = React.useState(1);
-  const ITEMS_PER_PAGE = 10;
-  
-  const gameName = decodeURIComponent(params.gameId as string);
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const shareUrl = baseUrl + `/game/${encodeURIComponent(gameName)}`;
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
-  // 게임 데이터 크롤링
+interface GameData {
+  name: string;
+  min_price?: number;
+  avg_price?: number;
+  max_price?: number;
+  recommended_price?: number;
+  count?: number;
+  items?: ItemData[];
+  updated_at?: string;
+}
+
+interface ItemData {
+  id: string;
+  title: string;
+  price: number;
+  status: string;
+  url: string;
+  created_at?: string;
+}
+
+export default function GameDetailPage({ params }: { params: { gameId: string } }) {
+  const [gameData, setGameData] = useState<GameData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const gameId = decodeURIComponent(params.gameId);
+
+  useEffect(() => {
+    fetchGameData();
+  }, [gameId]);
+
   const fetchGameData = async () => {
-    setIsLoading(true);
-    setError(null);
-    
     try {
-      const response = await fetch("/api/crawl", {
-        method: "POST",
+      setLoading(true);
+      const response = await fetch(`/api/crawl`, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ game: gameName }),
+        body: JSON.stringify({ game: gameId }),
       });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        setGameData(result);
-      } else {
-        setError(result.error || "매물을 찾을 수 없습니다.");
+
+      if (!response.ok) {
+        throw new Error('게임 데이터를 가져올 수 없습니다.');
       }
-    } catch (error) {
-      console.error("크롤링 에러:", error);
-      setError("데이터를 가져오는 중 오류가 발생했습니다.");
+
+      const data = await response.json();
+      setGameData(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  // 페이지 로드 시 자동 크롤링
-  React.useEffect(() => {
-    fetchGameData();
-  }, [gameName]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!search.trim()) return;
-    router.push(`/game/${encodeURIComponent(search.trim())}`);
+  const formatPrice = (price: number) => {
+    return price.toLocaleString('ko-KR');
   };
 
-  const handleRefresh = () => {
-    fetchGameData();
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR');
   };
 
-  // 추천 껨값 계산 (중위값 기준으로 약간 낮게)
-  const getRecommendedPrice = (medianPrice: number) => {
-    return Math.round(medianPrice * 0.9); // 중위값의 90%
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case '판매중':
+        return 'text-green-600 bg-green-100';
+      case '판매완료':
+        return 'text-red-600 bg-red-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
+    }
   };
 
-  // 페이지네이션 계산
-  const pagedItems = gameData && gameData.items
-    ? gameData.items.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
-    : [];
-  const totalPages = gameData && gameData.items
-    ? Math.ceil(gameData.items.length / ITEMS_PER_PAGE)
-    : 1;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">게임 데이터를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 text-6xl mb-4">⚠️</div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">오류 발생</h1>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Link 
+            href="/"
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            홈으로 돌아가기
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!gameData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-600 text-6xl mb-4">❓</div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">게임을 찾을 수 없습니다</h1>
+          <p className="text-gray-600 mb-6">"{gameId}"에 대한 데이터가 없습니다.</p>
+          <Link 
+            href="/"
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            홈으로 돌아가기
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-[#f9fafb] flex flex-col items-center py-6 px-2">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-4 border border-gray-100">
-        {/* 상단 네비 */}
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={() => router.push("/")}
-            className="p-2 rounded hover:bg-gray-100 transition"
-            aria-label="홈으로"
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="container mx-auto px-4 py-8">
+        {/* 헤더 */}
+        <header className="mb-8">
+          <Link 
+            href="/"
+            className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
           >
-            <Home size={28} className="text-[#2563eb]" />
-          </button>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleRefresh}
-              disabled={isLoading}
-              className="p-2 rounded hover:bg-gray-100 transition disabled:opacity-50"
-              aria-label="새로고침"
-            >
-              <RefreshCw size={24} className={`text-[#2563eb] ${isLoading ? 'animate-spin' : ''}`} />
-            </button>
-            <button
-              className="p-2 rounded hover:bg-gray-100 transition"
-              aria-label="공유하기"
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(window.location.href);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                } catch (e) {
-                  alert("클립보드 복사에 실패했습니다.");
-                }
-              }}
-            >
-              <Share2 size={26} className="text-[#2563eb]" />
-            </button>
+            ← 홈으로 돌아가기
+          </Link>
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">{gameData.name}</h1>
+          <p className="text-gray-600">
+            번개장터 중고 가격 정보 • {gameData.count || 0}개 매물
+            {gameData.updated_at && (
+              <span className="ml-2">• 업데이트: {formatDate(gameData.updated_at)}</span>
+            )}
+          </p>
+        </header>
+
+        {/* 가격 통계 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">최저가</h3>
+            <p className="text-3xl font-bold text-green-600">
+              {gameData.min_price ? `${formatPrice(gameData.min_price)}원` : 'N/A'}
+            </p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">평균가</h3>
+            <p className="text-3xl font-bold text-blue-600">
+              {gameData.avg_price ? `${formatPrice(gameData.avg_price)}원` : 'N/A'}
+            </p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">최고가</h3>
+            <p className="text-3xl font-bold text-red-600">
+              {gameData.max_price ? `${formatPrice(gameData.max_price)}원` : 'N/A'}
+            </p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-6 bg-gradient-to-r from-purple-500 to-purple-600">
+            <h3 className="text-lg font-semibold text-white mb-2">추천가</h3>
+            <p className="text-3xl font-bold text-white">
+              {gameData.recommended_price ? `${formatPrice(gameData.recommended_price)}원` : 'N/A'}
+            </p>
           </div>
         </div>
-        
-        {copied && (
-          <div className="mb-2 text-center text-sm text-[#3182f6] font-bold animate-fade-in">링크가 복사되었습니다!</div>
-        )}
-        
-        {/* 검색필드 */}
-        <form onSubmit={handleSearch} className="flex gap-2 mb-4">
-          <Input
-            className="flex-1 h-10 text-base bg-[#f5f6fa] border-none focus:ring-2 focus:ring-[#3182f6]"
-            placeholder="게임명을 입력하세요"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            autoComplete="off"
-          />
-          <button
-            type="submit"
-            className="bg-[#3182f6] text-white font-bold rounded-lg px-4 h-10 text-base shadow-sm hover:bg-[#2563eb] transition flex items-center gap-2"
-          >
-            <Search className="w-4 h-4" />
-            검색
-          </button>
-        </form>
 
-        {/* 로딩 상태 */}
-        {isLoading && (
-          <div className="text-center py-8">
-            <Loader2 className="w-8 h-8 animate-spin text-[#3182f6] mx-auto mb-2" />
-            <div className="text-gray-600">시세 정보를 가져오는 중...</div>
-          </div>
-        )}
-
-        {/* 에러 상태 */}
-        {error && !isLoading && (
-          <div className="text-center py-8">
-            <div className="text-red-600 font-semibold mb-2">검색 결과 없음</div>
-            <div className="text-gray-500 text-sm mb-4">{error}</div>
-            <button
-              onClick={handleRefresh}
-              className="bg-[#3182f6] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#2563eb] transition"
-            >
-              다시 시도
-            </button>
-          </div>
-        )}
-
-        {/* 시세 카드 */}
-        {gameData && !isLoading && (
-          <>
-            <div className="rounded-xl border border-gray-200 bg-[#f5f6fa] p-4 mb-4 shadow-sm">
-              <div className="text-lg font-bold text-[#222] mb-2">{gameData.game}</div>
-              <div className="flex justify-between text-xs mb-1">
-                <div className="text-blue-600">최저가<br /><span className="font-bold text-base">{gameData.min_price.toLocaleString()}원</span></div>
-                <div className="text-gray-600">평균가<br /><span className="font-bold text-base">{gameData.avg_price.toLocaleString()}원</span></div>
-                <div className="text-red-500">최고가<br /><span className="font-bold text-base">{gameData.max_price.toLocaleString()}원</span></div>
-              </div>
-              <div className="mt-2 bg-[#e8f3ff] rounded-lg py-2 text-center text-[#3182f6] font-bold text-base tracking-tight">
-                추천 껨값 <span className="text-2xl">{(Math.round(gameData.median_price / 1000) * 1000).toLocaleString()}원</span>
-              </div>
-              <div className="text-xs text-gray-400 text-right mt-1">번개장터 실시간 기준</div>
-            </div>
-
-            {/* 탭 UI */}
-            <div className="flex mb-2 border rounded-lg overflow-hidden">
-              <button
-                className={`flex-1 py-2 text-sm font-bold ${tab === "online" ? "bg-[#3182f6] text-white" : "bg-white text-[#222]"}`}
-                onClick={() => setTab("online")}
-                type="button"
-              >
-                온라인 시세
-              </button>
-              <button
-                className={`flex-1 py-2 text-sm font-bold ${tab === "offline" ? "bg-[#3182f6] text-white" : "bg-white text-[#222]"}`}
-                onClick={() => setTab("offline")}
-                type="button"
-              >
-                오프라인 정보
-              </button>
-            </div>
-
-            {/* 리스트 */}
-            {tab === "online" ? (
-              <div className="space-y-2">
-                {pagedItems && pagedItems.length > 0 ? (
-                  pagedItems.map((item: any, i: number) => {
-                    // 판매 상태 확인 (제목에 "판매완료", "예약중" 등의 키워드가 있는지)
-                    const isSold = item.title?.includes('판매완료') || item.title?.includes('예약중') || item.title?.includes('거래완료');
-                    const isReserved = item.title?.includes('예약중') || item.title?.includes('예약');
-                    
-                    // 상세페이지 url만 허용
-                    const isValidProductUrl = item.url && typeof item.url === 'string' && item.url.startsWith('https://www.bunjang.co.kr/products/');
-                    
-                    return (
-                      <div
-                        key={i + (page-1)*ITEMS_PER_PAGE}
-                        className={`block border rounded-lg p-3 transition ${
-                          isSold 
-                            ? 'bg-gray-100 opacity-60' 
-                            : isReserved 
-                              ? 'bg-yellow-50 border-yellow-200' 
-                              : 'bg-[#f9fafb] hover:bg-[#e8f3ff]'
-                        }`}
+        {/* 매물 목록 */}
+        {gameData.items && gameData.items.length > 0 ? (
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">매물 목록</h2>
+            <div className="space-y-4">
+              {gameData.items.map((item) => (
+                <div key={item.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-semibold text-gray-800 flex-1 mr-4">
+                      <a 
+                        href={item.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:text-blue-600 transition-colors"
                       >
-                        <div className="flex items-start justify-between mb-1">
-                          <div className="font-semibold text-[#222] text-sm flex-1">{item.title}</div>
-                          {isSold && (
-                            <span className="ml-2 px-2 py-1 bg-red-100 text-red-600 text-xs font-bold rounded">
-                              판매완료
-                            </span>
-                          )}
-                          {isReserved && !isSold && (
-                            <span className="ml-2 px-2 py-1 bg-yellow-100 text-yellow-600 text-xs font-bold rounded">
-                              예약중
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex justify-between text-xs items-center">
-                          <span className={`font-bold ${isSold ? 'text-gray-500 line-through' : 'text-blue-600'}`}>
-                            {item.price.toLocaleString()}원
-                          </span>
-                          <span className="text-gray-400">{item.date}</span>
-                          {isValidProductUrl ? (
-                            <a 
-                              href={item.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={`text-xs underline ${
-                                isSold ? 'text-gray-400' : 'text-[#3182f6]'
-                              }`}
-                            >
-                              바로가기
-                            </a>
-                          ) : (
-                            <span className="text-gray-400 text-xs">링크 없음</span>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="text-center py-4 text-gray-500">
-                    온라인 매물이 없습니다.
+                        {item.title}
+                      </a>
+                    </h3>
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(item.status)}`}>
+                      {item.status}
+                    </span>
                   </div>
-                )}
-                {/* 페이지네이션 UI */}
-                {totalPages > 1 && (
-                  <div className="flex justify-center gap-2 mt-4">
-                    <button
-                      className="px-3 py-1 rounded border text-sm font-bold disabled:opacity-40"
-                      onClick={() => setPage(page - 1)}
-                      disabled={page === 1}
-                    >
-                      이전
-                    </button>
-                    {Array.from({ length: totalPages }, (_, idx) => (
-                      <button
-                        key={idx}
-                        className={`px-3 py-1 rounded border text-sm font-bold ${page === idx + 1 ? 'bg-[#3182f6] text-white' : 'bg-white text-[#222]'}`}
-                        onClick={() => setPage(idx + 1)}
-                      >
-                        {idx + 1}
-                      </button>
-                    ))}
-                    <button
-                      className="px-3 py-1 rounded border text-sm font-bold disabled:opacity-40"
-                      onClick={() => setPage(page + 1)}
-                      disabled={page === totalPages}
-                    >
-                      다음
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <div className="border rounded-lg p-3 bg-[#f9fafb]">
-                  <div className="font-semibold text-[#222] text-sm mb-1">
-                    중고게임샵 <span className="text-blue-600 font-bold ml-2">준비중</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-gray-400">오프라인 정보</span>
-                    <span className="text-gray-500">서비스 준비 중</span>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-2xl font-bold text-green-600">
+                      {formatPrice(item.price)}원
+                    </span>
+                    {item.created_at && (
+                      <span className="text-sm text-gray-500">
+                        {formatDate(item.created_at)}
+                      </span>
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
-          </>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div className="text-gray-400 text-6xl mb-4">📦</div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">매물이 없습니다</h2>
+            <p className="text-gray-600">현재 판매 중인 매물이 없습니다.</p>
+          </div>
         )}
       </div>
-    </main>
+    </div>
   );
 } 

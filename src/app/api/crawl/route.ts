@@ -2,6 +2,18 @@ import { NextRequest } from "next/server";
 import { spawn } from "child_process";
 import path from "path";
 
+interface CrawlerResult {
+  success: boolean;
+  count?: number;
+  min_price?: number;
+  avg_price?: number;
+  max_price?: number;
+  median_price?: number;
+  items?: unknown[];
+  price_ranges?: Record<string, unknown>;
+  error?: string;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { game } = await req.json();
@@ -37,7 +49,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-function runCrawler(game: string): Promise<any> {
+function runCrawler(game: string): Promise<CrawlerResult> {
   return new Promise((resolve, reject) => {
     const crawlerPath = path.join(process.cwd(), "crawler", "bunjang.js");
     const child = spawn("node", [crawlerPath, game], {
@@ -73,7 +85,7 @@ function runCrawler(game: string): Promise<any> {
           }
           // JSON 결과가 없으면 기본 성공 응답
           resolve({ success: true });
-        } catch (e) {
+        } catch {
           resolve({ success: true });
         }
       } else {
