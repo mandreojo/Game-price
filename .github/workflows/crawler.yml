@@ -1,13 +1,13 @@
-name: Daily Price Crawler
+name: Daily Game Price Crawler
 
 on:
   schedule:
-    # 매일 자정 (UTC 기준, 한국 시간 오전 9시)
-    - cron: '0 0 * * *'
+    # 매일 정오 (UTC 03:00 = 한국시간 12:00)
+    - cron: '0 3 * * *'
   workflow_dispatch: # 수동 실행 가능
 
 jobs:
-  crawl-prices:
+  crawl:
     runs-on: ubuntu-latest
     
     steps:
@@ -19,33 +19,38 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: crawler/package-lock.json
         
     - name: Install dependencies
+      run: npm ci
+      
+    - name: Install crawler dependencies
       run: |
         cd crawler
         npm ci
         
-    - name: Setup Firebase credentials
+    - name: Setup environment variables
       run: |
-        cd crawler
-        echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}' > serviceAccountKey.json
+        echo "NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}" >> .env
+        echo "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}" >> .env
+        echo "NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}" >> .env
+        echo "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" >> .env
+        echo "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}" >> .env
+        echo "NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}" >> .env
+        echo "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}" >> .env
+        echo "FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }}" >> .env
+        echo "FIREBASE_CLIENT_EMAIL=${{ secrets.FIREBASE_CLIENT_EMAIL }}" >> .env
+        echo "FIREBASE_PRIVATE_KEY_ID=${{ secrets.FIREBASE_PRIVATE_KEY_ID }}" >> .env
+        echo "FIREBASE_CLIENT_ID=${{ secrets.FIREBASE_CLIENT_ID }}" >> .env
         
-    - name: Run crawler for all games
+    - name: Run crawler
       run: |
         cd crawler
-        # Firestore에서 게임 목록을 가져와서 크롤링
-        node run-crawler.js
-        
-    - name: Cleanup
-      run: |
-        cd crawler
-        rm -f serviceAccountKey.json
+        node bunjang.js
         
     - name: Commit and push results
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add .
-        git diff --quiet && git diff --staged --quiet || git commit -m "Update price data - $(date)"
+        git diff --quiet && git diff --staged --quiet || git commit -m "🤖 자동 크롤링 결과 업데이트 - $(date)"
         git push 
