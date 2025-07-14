@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firestore 게임 리스트 대량 등록기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Firestore 게임 리스트 대량 등록기</h1>
+                <p class="mt-2 text-gray-600">JSON 데이터를 사용해서 Firestore에 게임 목록을 한 방에 추가해보슈!</p>
+            </div>
+
+            <!-- Step 1: Firebase Config -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-800 border-b pb-2">1단계: Firebase 프로젝트 정보 확인</h2>
+                <p class="text-sm text-gray-500 mb-4">
+                    재율애비 양반의 프로젝트 정보가 자동으로 입력돼있슈. 혹시 다른 프로젝트에 쓸라믄 직접 수정하셔도 돼유.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="apiKey" placeholder="apiKey" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" value="AIzaSyAL9ffRKWav4Nisoji2GxBoGodQT-Cv0IM">
+                    <input type="text" id="authDomain" placeholder="authDomain" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" value="ggemgap.firebaseapp.com">
+                    <input type="text" id="projectId" placeholder="projectId" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" value="ggemgap">
+                    <input type="text" id="storageBucket" placeholder="storageBucket" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" value="ggemgap.firebasestorage.app">
+                    <input type="text" id="messagingSenderId" placeholder="messagingSenderId" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" value="797868756155">
+                    <input type="text" id="appId" placeholder="appId" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" value="1:797868756155:web:a4b60a2c51f9ef121bad9e">
+                </div>
+            </div>
+
+            <!-- Step 2: JSON Data Input -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-800 border-b pb-2">2단계: 게임 목록 JSON 데이터 붙여넣기</h2>
+                <textarea id="jsonData" rows="15" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="여기에 최종 검수한 게임 목록 JSON 데이터를 붙여넣으세유..."></textarea>
+            </div>
+
+            <!-- Step 3: Upload Button -->
+            <div class="text-center mb-6">
+                <button id="uploadButton" class="w-full md:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 ease-in-out transform hover:scale-105">
+                    데이터베이스에 등록하기
+                </button>
+            </div>
+
+            <!-- Step 4: Log Output -->
+            <div>
+                <h2 class="text-xl font-semibold mb-3 text-gray-800 border-b pb-2">작업 로그</h2>
+                <div id="log" class="w-full h-48 bg-gray-900 text-white text-sm font-mono p-4 rounded-lg overflow-y-auto">
+                    <p class="text-gray-400">작업을 시작하믄 여기에 진행 상황이 표시될 거여유...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase SDK 임포트
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, serverTimestamp, initializeFirestore, CACHE_SIZE_UNLIMITED } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // DOM 요소 가져오기
+        const uploadButton = document.getElementById('uploadButton');
+        const logDiv = document.getElementById('log');
+        let db; // db 인스턴스를 전역으로 관리
+        let app; // app 인스턴스도 전역으로 관리
+
+        // 로그 출력 함수
+        function log(message, isError = false) {
+            const p = document.createElement('p');
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            if (isError) {
+                p.className = 'text-red-400';
+            } else {
+                p.className = 'text-green-400';
+            }
+            logDiv.appendChild(p);
+            logDiv.scrollTop = logDiv.scrollHeight; // 항상 마지막 로그가 보이도록 스크롤
+        }
+
+        // Firebase 초기화 함수
+        function initializeDb() {
+             // 1. Firebase 설정 값 가져오기
+            const firebaseConfig = {
+                apiKey: document.getElementById('apiKey').value,
+                authDomain: document.getElementById('authDomain').value,
+                projectId: document.getElementById('projectId').value,
+                storageBucket: document.getElementById('storageBucket').value,
+                messagingSenderId: document.getElementById('messagingSenderId').value,
+                appId: document.getElementById('appId').value,
+            };
+
+            // 설정 값이 하나라도 비어있는지 확인
+            if (Object.values(firebaseConfig).some(val => !val)) {
+                log('Firebase 설정 값이 비어있슈. 모든 칸을 채워주셔유.', true);
+                return false;
+            }
+            
+            // 이미 초기화된 앱이 있다면 다시 초기화하지 않음
+            if (!app || app.options.projectId !== firebaseConfig.projectId) {
+                try {
+                    app = initializeApp(firebaseConfig);
+                    db = initializeFirestore(app, {
+                        cacheSizeBytes: CACHE_SIZE_UNLIMITED
+                    });
+                    log('Firebase가 성공적으로 연결됐슈.');
+                } catch (error) {
+                    log(`Firebase 연결 실패: ${error.message}`, true);
+                    console.error(error);
+                    return false;
+                }
+            } else {
+                 log('이미 연결된 Firebase를 사용합니더.');
+            }
+            return true;
+        }
+
+
+        // 업로드 버튼 클릭 이벤트 리스너
+        uploadButton.addEventListener('click', async () => {
+            logDiv.innerHTML = ''; // 이전 로그 초기화
+            log('작업을 시작합니더...');
+
+            // Firebase 초기화 또는 연결 확인
+            if (!initializeDb()) {
+                return;
+            }
+
+            // 3. JSON 데이터 가져오고 파싱하기
+            const jsonData = document.getElementById('jsonData').value;
+            if (!jsonData) {
+                log('JSON 데이터가 비어있슈. 데이터를 붙여넣어 주셔유.', true);
+                return;
+            }
+
+            let games;
+            try {
+                games = JSON.parse(jsonData);
+                if (!Array.isArray(games)) {
+                    throw new Error('데이터는 배열 형태여야 합니더.');
+                }
+                log(`총 ${games.length}개의 게임 데이터를 찾았슈. 등록을 시작합니더.`);
+            } catch (error) {
+                log(`JSON 데이터 파싱 오류: ${error.message}`, true);
+                log('JSON 형식이 올바른지 다시 한번 확인해주셔유. 대괄호([])로 시작하고 끝나야 합니더.', true);
+                return;
+            }
+
+            // 4. Firestore에 데이터 등록하기
+            const gamelistRef = collection(db, 'gamelist');
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (const game of games) {
+                // *** 수정된 부분 ***
+                // 이제 'name' 필드가 있는지 확인합니다.
+                if (!game.name) {
+                    log(`'name' 필드가 없는 데이터가 있슈. 건너뜁니더.`, true);
+                    errorCount++;
+                    continue;
+                }
+                
+                try {
+                    // *** 수정된 부분 ***
+                    // 문서 ID로 'name' 필드 값을 사용합니다.
+                    const gameData = { ...game, last_updated: serverTimestamp() };
+                    await setDoc(doc(gamelistRef, game.name), gameData);
+                    log(`✅ '${game.name}' 등록 성공!`);
+                    successCount++;
+                } catch (error) {
+                    log(`❌ '${game.name}' 등록 실패: ${error.message}`, true);
+                    errorCount++;
+                }
+            }
+            
+            log('------------------------------------');
+            log(`작업 완료! 성공: ${successCount}건, 실패: ${errorCount}건`);
+        });
+    </script>
+</body>
+</html>

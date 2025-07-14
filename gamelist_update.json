@@ -1,0 +1,923 @@
+[
+    {
+      "name": "모여봐요 동물의 숲",
+      "tag": "모동숲",
+      "platform": ["Nintendo Switch"],
+      "genre": ["시뮬레이션"],
+      "release_date": "2020-03-20",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "마리오 카트 8 디럭스",
+      "tag": "마카8",
+      "platform": ["Nintendo Switch"],
+      "genre": ["레이싱"],
+      "release_date": "2017-04-28",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "슈퍼 스매시브라더스 얼티밋",
+      "tag": "대난투",
+      "platform": ["Nintendo Switch"],
+      "genre": ["격투"],
+      "release_date": "2018-12-07",
+      "developer": "Bandai Namco Studios",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "젤다의 전설 브레스 오브 더 와일드",
+      "tag": "야숨",
+      "platform": ["Nintendo Switch", "Wii U"],
+      "genre": ["액션 어드벤처", "오픈월드"],
+      "release_date": "2017-03-03",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "슈퍼 마리오 오디세이",
+      "tag": "마딧세이",
+      "platform": ["Nintendo Switch"],
+      "genre": ["플랫포머", "액션"],
+      "release_date": "2017-10-27",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "포켓몬스터 소드",
+      "tag": "포켓몬 소드",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG"],
+      "release_date": "2019-11-15",
+      "developer": "Game Freak",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "포켓몬스터 실드",
+      "tag": "포켓몬 실드",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG"],
+      "release_date": "2019-11-15",
+      "developer": "Game Freak",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "링 피트 어드벤처",
+      "tag": "링피트",
+      "platform": ["Nintendo Switch"],
+      "genre": ["피트니스", "RPG"],
+      "release_date": "2019-10-18",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "젤다의 전설 티어스 오브 더 킹덤",
+      "tag": "왕눈",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 어드벤처", "오픈월드"],
+      "release_date": "2023-05-12",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "별의 커비 디스커버리",
+      "tag": "커비 디스커버리",
+      "platform": ["Nintendo Switch"],
+      "genre": ["플랫포머", "액션"],
+      "release_date": "2022-03-25",
+      "developer": "HAL Laboratory",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "포켓몬스터 스칼렛",
+      "tag": "포켓몬 스칼렛",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG", "오픈월드"],
+      "release_date": "2022-11-18",
+      "developer": "Game Freak",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "포켓몬스터 바이올렛",
+      "tag": "포켓몬 바이올렛",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG", "오픈월드"],
+      "release_date": "2022-11-18",
+      "developer": "Game Freak",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "스플래툰 3",
+      "tag": "스플래툰3",
+      "platform": ["Nintendo Switch"],
+      "genre": ["TPS", "슈팅"],
+      "release_date": "2022-09-09",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "몬스터헌터 라이즈",
+      "tag": "몬헌 라이즈",
+      "platform": ["Nintendo Switch", "PC"],
+      "genre": ["액션 RPG"],
+      "release_date": "2021-03-26",
+      "developer": "Capcom",
+      "publisher": "Capcom",
+      "search_count": 0
+    },
+    {
+      "name": "닌텐도 스위치 스포츠",
+      "tag": "스위치스포츠",
+      "platform": ["Nintendo Switch"],
+      "genre": ["스포츠"],
+      "release_date": "2022-04-29",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "슈퍼 마리오 파티",
+      "tag": "슈마파",
+      "platform": ["Nintendo Switch"],
+      "genre": ["파티게임"],
+      "release_date": "2018-10-05",
+      "developer": "NDCUBE",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "New 슈퍼 마리오브라더스 U 디럭스",
+      "tag": "뉴슈마U",
+      "platform": ["Nintendo Switch"],
+      "genre": ["플랫포머"],
+      "release_date": "2019-01-11",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "루이지 맨션 3",
+      "tag": "루이지맨션3",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 어드벤처"],
+      "release_date": "2019-10-31",
+      "developer": "Next Level Games",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "Pokémon LEGENDS 아르세우스",
+      "tag": "레알세",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 RPG"],
+      "release_date": "2022-01-28",
+      "developer": "Game Freak",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "슈퍼 마리오 3D 월드 + 퓨리 월드",
+      "tag": "마리오3D월드",
+      "platform": ["Nintendo Switch"],
+      "genre": ["플랫포머"],
+      "release_date": "2021-02-12",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "포켓몬스터 브릴리언트 다이아몬드",
+      "tag": "브다",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG"],
+      "release_date": "2021-11-19",
+      "developer": "ILCA",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "포켓몬스터 샤이닝 펄",
+      "tag": "샤펄",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG"],
+      "release_date": "2021-11-19",
+      "developer": "ILCA",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "젤다의 전설 꿈꾸는 섬",
+      "tag": "꿈섬",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 어드벤처"],
+      "release_date": "2019-09-20",
+      "developer": "Grezzo",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "마리오 파티 슈퍼스타즈",
+      "tag": "마파 슈퍼스타즈",
+      "platform": ["Nintendo Switch"],
+      "genre": ["파티게임"],
+      "release_date": "2021-10-29",
+      "developer": "NDCUBE",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "파이어 엠블렘 풍화설월",
+      "tag": "풍화설월",
+      "platform": ["Nintendo Switch"],
+      "genre": ["전략 RPG"],
+      "release_date": "2019-07-26",
+      "developer": "Intelligent Systems",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "스플래툰 2",
+      "tag": "스플래툰2",
+      "platform": ["Nintendo Switch"],
+      "genre": ["TPS", "슈팅"],
+      "release_date": "2017-07-21",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "별의 커비 스타 얼라이즈",
+      "tag": "스타얼라이즈",
+      "platform": ["Nintendo Switch"],
+      "genre": ["플랫포머", "액션"],
+      "release_date": "2018-03-16",
+      "developer": "HAL Laboratory",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "젤다무쌍 대재앙의 시대",
+      "tag": "젤다무쌍",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션", "무쌍"],
+      "release_date": "2020-11-20",
+      "developer": "Omega Force",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "메트로이드 드레드",
+      "tag": "메트로이드",
+      "platform": ["Nintendo Switch"],
+      "genre": ["메트로배니아", "액션"],
+      "release_date": "2021-10-08",
+      "developer": "MercurySteam",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "제노블레이드 크로니클스 2",
+      "tag": "제노블2",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 RPG", "JRPG"],
+      "release_date": "2017-12-01",
+      "developer": "Monolith Soft",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "피크민 4",
+      "tag": "피크민4",
+      "platform": ["Nintendo Switch"],
+      "genre": ["전략", "퍼즐"],
+      "release_date": "2023-07-21",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "옥토패스 트래블러",
+      "tag": "옥토패스1",
+      "platform": ["Nintendo Switch", "PC"],
+      "genre": ["RPG", "JRPG"],
+      "release_date": "2018-07-13",
+      "developer": "Square Enix",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "페이퍼 마리오 종이접기 킹",
+      "tag": "페이퍼마리오",
+      "platform": ["Nintendo Switch"],
+      "genre": ["어드벤처", "RPG"],
+      "release_date": "2020-07-17",
+      "developer": "Intelligent Systems",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "동키콩 컨트리 트로피컬 프리즈",
+      "tag": "동키콩",
+      "platform": ["Nintendo Switch", "Wii U"],
+      "genre": ["플랫포머"],
+      "release_date": "2018-05-04",
+      "developer": "Retro Studios",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "제노블레이드 크로니클스 3",
+      "tag": "제노블3",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 RPG", "JRPG"],
+      "release_date": "2022-07-29",
+      "developer": "Monolith Soft",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "슈퍼 마리오 메이커 2",
+      "tag": "슈마메2",
+      "platform": ["Nintendo Switch"],
+      "genre": ["플랫포머", "레벨에디터"],
+      "release_date": "2019-06-28",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "젤다의 전설 스카이워드 소드 HD",
+      "tag": "스카이워드소드",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 어드벤처"],
+      "release_date": "2021-07-16",
+      "developer": "Tantalus Media",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "파이어 엠블렘 인게이지",
+      "tag": "파엠 인게이지",
+      "platform": ["Nintendo Switch"],
+      "genre": ["전략 RPG"],
+      "release_date": "2023-01-20",
+      "developer": "Intelligent Systems",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "베요네타 3",
+      "tag": "베요네타3",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션"],
+      "release_date": "2022-10-28",
+      "developer": "PlatinumGames",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "피크민 3 디럭스",
+      "tag": "피크민3",
+      "platform": ["Nintendo Switch"],
+      "genre": ["전략", "퍼즐"],
+      "release_date": "2020-10-30",
+      "developer": "Eighting",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "슈퍼 마리오 RPG",
+      "tag": "마리오RPG",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG"],
+      "release_date": "2023-11-17",
+      "developer": "ArtePiazza",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "미토피아",
+      "tag": "미토피아",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG", "어드벤처"],
+      "release_date": "2021-05-21",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "요시 크래프트 월드",
+      "tag": "요시",
+      "platform": ["Nintendo Switch"],
+      "genre": ["플랫포머"],
+      "release_date": "2019-03-29",
+      "developer": "Good-Feel",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "애스트럴 체인",
+      "tag": "애스트럴체인",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션"],
+      "release_date": "2019-08-30",
+      "developer": "PlatinumGames",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "ARMS",
+      "tag": "암즈",
+      "platform": ["Nintendo Switch"],
+      "genre": ["격투"],
+      "release_date": "2017-06-16",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "세계의 놀이대전 51",
+      "tag": "놀이대전",
+      "platform": ["Nintendo Switch"],
+      "genre": ["파티게임", "보드게임"],
+      "release_date": "2020-06-05",
+      "developer": "NDCUBE",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "New 포켓몬 스냅",
+      "tag": "포켓몬스냅",
+      "platform": ["Nintendo Switch"],
+      "genre": ["시뮬레이션"],
+      "release_date": "2021-04-30",
+      "developer": "Bandai Namco Studios",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "피트니스 복싱 2: 리듬 & 엑서사이즈",
+      "tag": "피트니스복싱2",
+      "platform": ["Nintendo Switch"],
+      "genre": ["피트니스", "리듬"],
+      "release_date": "2020-12-04",
+      "developer": "Imagineer",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "즐거움을 나눠라 메이드 인 와리오",
+      "tag": "메이드인와리오",
+      "platform": ["Nintendo Switch"],
+      "genre": ["파티게임", "미니게임"],
+      "release_date": "2021-09-10",
+      "developer": "Intelligent Systems",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "마리오 스트라이커즈 배틀 리그",
+      "tag": "마리오스트라이커즈",
+      "platform": ["Nintendo Switch"],
+      "genre": ["스포츠", "축구"],
+      "release_date": "2022-06-10",
+      "developer": "Next Level Games",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "마리오 골프 슈퍼 러시",
+      "tag": "마리오골프",
+      "platform": ["Nintendo Switch"],
+      "genre": ["스포츠", "골프"],
+      "release_date": "2021-06-25",
+      "developer": "Camelot",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "마리오 테니스 에이스",
+      "tag": "마리오테니스",
+      "platform": ["Nintendo Switch"],
+      "genre": ["스포츠", "테니스"],
+      "release_date": "2018-06-22",
+      "developer": "Camelot",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "데몬 X 마키나",
+      "tag": "데몬엑스마키나",
+      "platform": ["Nintendo Switch", "PC"],
+      "genre": ["액션", "메카"],
+      "release_date": "2019-09-13",
+      "developer": "Marvelous",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "1-2-Switch",
+      "tag": "원투스위치",
+      "platform": ["Nintendo Switch"],
+      "genre": ["파티게임"],
+      "release_date": "2017-03-03",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "말랑말랑 두뇌학원",
+      "tag": "두뇌학원",
+      "platform": ["Nintendo Switch"],
+      "genre": ["퍼즐", "교육"],
+      "release_date": "2021-12-03",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "페이퍼 마리오 1000년의 문",
+      "tag": "천년문",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG"],
+      "release_date": "2024-05-23",
+      "developer": "Intelligent Systems",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "프린세스 피치 Showtime!",
+      "tag": "피치공주",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션"],
+      "release_date": "2024-03-22",
+      "developer": "Good-Feel",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "루이지 맨션 2 HD",
+      "tag": "루이지맨션2",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 어드벤처"],
+      "release_date": "2024-06-27",
+      "developer": "Tantalus Media",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "마리오 vs. 동키콩",
+      "tag": "마리오vs동키콩",
+      "platform": ["Nintendo Switch"],
+      "genre": ["퍼즐", "플랫포머"],
+      "release_date": "2024-02-16",
+      "developer": "Nintendo Software Technology",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "메트로이드 프라임 리마스터",
+      "tag": "메트로이드프라임",
+      "platform": ["Nintendo Switch"],
+      "genre": ["FPS", "액션 어드벤처"],
+      "release_date": "2023-02-08",
+      "developer": "Retro Studios",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "에브리바디 원 투 스위치!",
+      "tag": "에브리바디",
+      "platform": ["Nintendo Switch"],
+      "genre": ["파티게임"],
+      "release_date": "2023-06-30",
+      "developer": "Nintendo EPD",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "어드밴스 워즈 1+2: 리부트 캠프",
+      "tag": "어드밴스워즈",
+      "platform": ["Nintendo Switch"],
+      "genre": ["전략", "턴제"],
+      "release_date": "2023-04-21",
+      "developer": "WayForward",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "어나더 코드 리컬렉션",
+      "tag": "어나더코드",
+      "platform": ["Nintendo Switch"],
+      "genre": ["어드벤처", "퍼즐"],
+      "release_date": "2024-01-19",
+      "developer": "Arc System Works",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "몬스터 헌터 스토리즈 2 파멸의 날개",
+      "tag": "몬헌스토리즈2",
+      "platform": ["Nintendo Switch", "PC"],
+      "genre": ["RPG"],
+      "release_date": "2021-07-09",
+      "developer": "Capcom",
+      "publisher": "Capcom",
+      "search_count": 0
+    },
+    {
+      "name": "진 여신전생 5",
+      "tag": "진여신5",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG", "JRPG"],
+      "release_date": "2021-11-11",
+      "developer": "Atlus",
+      "publisher": "Sega",
+      "search_count": 0
+    },
+    {
+      "name": "옥토패스 트래블러 2",
+      "tag": "옥토패스2",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["RPG", "JRPG"],
+      "release_date": "2023-02-24",
+      "developer": "Square Enix",
+      "publisher": "Square Enix",
+      "search_count": 0
+    },
+    {
+      "name": "트라이앵글 스트래티지",
+      "tag": "트라이앵글",
+      "platform": ["Nintendo Switch", "PC"],
+      "genre": ["전략 RPG"],
+      "release_date": "2022-03-04",
+      "developer": "Artdink",
+      "publisher": "Square Enix",
+      "search_count": 0
+    },
+    {
+      "name": "드래곤 퀘스트 11 S 지나간 시간을 찾아서 - Definitive Edition",
+      "tag": "드퀘11S",
+      "platform": ["Nintendo Switch", "PC", "PS4"],
+      "genre": ["RPG", "JRPG"],
+      "release_date": "2019-09-27",
+      "developer": "Square Enix",
+      "publisher": "Square Enix",
+      "search_count": 0
+    },
+    {
+      "name": "페르소나 5 더 로열",
+      "tag": "페르소나5",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["RPG", "JRPG"],
+      "release_date": "2022-10-21",
+      "developer": "Atlus",
+      "publisher": "Sega",
+      "search_count": 0
+    },
+    {
+      "name": "니어: 오토마타 The End of YoRHa Edition",
+      "tag": "니어오토마타",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 RPG"],
+      "release_date": "2022-10-06",
+      "developer": "PlatinumGames",
+      "publisher": "Square Enix",
+      "search_count": 0
+    },
+    {
+      "name": "유니콘 오버로드",
+      "tag": "유니콘오버로드",
+      "platform": ["Nintendo Switch", "PS4", "PS5"],
+      "genre": ["전략 RPG"],
+      "release_date": "2024-03-08",
+      "developer": "Vanillaware",
+      "publisher": "Atlus",
+      "search_count": 0
+    },
+    {
+      "name": "더 위쳐 3: 와일드 헌트 컴플리트 에디션",
+      "tag": "위쳐3",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["액션 RPG", "오픈월드"],
+      "release_date": "2019-10-15",
+      "developer": "CD PROJEKT RED",
+      "publisher": "CD PROJEKT RED",
+      "search_count": 0
+    },
+    {
+      "name": "디아블로 3: 이터널 컬렉션",
+      "tag": "디아3",
+      "platform": ["Nintendo Switch", "PC", "PS4"],
+      "genre": ["액션 RPG", "핵앤슬래시"],
+      "release_date": "2018-11-02",
+      "developer": "Blizzard Entertainment",
+      "publisher": "Blizzard Entertainment",
+      "search_count": 0
+    },
+    {
+      "name": "엘더스크롤 5: 스카이림",
+      "tag": "스카이림",
+      "platform": ["Nintendo Switch", "PC", "PS4"],
+      "genre": ["액션 RPG", "오픈월드"],
+      "release_date": "2017-11-17",
+      "developer": "Bethesda Game Studios",
+      "publisher": "Bethesda Softworks",
+      "search_count": 0
+    },
+    {
+      "name": "호그와트 레거시",
+      "tag": "호그와트",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["액션 RPG", "오픈월드"],
+      "release_date": "2023-11-14",
+      "developer": "Avalanche Software",
+      "publisher": "Warner Bros. Games",
+      "search_count": 0
+    },
+    {
+      "name": "페르소나 5 택티카",
+      "tag": "P5T",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["전략 RPG"],
+      "release_date": "2023-11-17",
+      "developer": "Atlus",
+      "publisher": "Sega",
+      "search_count": 0
+    },
+    {
+      "name": "진 여신전생 5 Vengeance",
+      "tag": "진여신5V",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["RPG", "JRPG"],
+      "release_date": "2024-06-14",
+      "developer": "Atlus",
+      "publisher": "Sega",
+      "search_count": 0
+    },
+    {
+      "name": "라이브 어 라이브",
+      "tag": "라이브어라이브",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["RPG", "JRPG"],
+      "release_date": "2022-07-22",
+      "developer": "Square Enix",
+      "publisher": "Nintendo",
+      "search_count": 0
+    },
+    {
+      "name": "드래곤 퀘스트 몬스터즈 3: 마족 왕자와 엘프의 여행",
+      "tag": "드퀘몬3",
+      "platform": ["Nintendo Switch"],
+      "genre": ["RPG"],
+      "release_date": "2023-12-01",
+      "developer": "Square Enix",
+      "publisher": "Square Enix",
+      "search_count": 0
+    },
+    {
+      "name": "페르시아의 왕자: 잃어버린 왕관",
+      "tag": "페르시아왕자",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["메트로배니아", "액션"],
+      "release_date": "2024-01-18",
+      "developer": "Ubisoft Montpellier",
+      "publisher": "Ubisoft",
+      "search_count": 0
+    },
+    {
+      "name": "역전재판 456 오도로키 셀렉션",
+      "tag": "역전재판456",
+      "platform": ["Nintendo Switch", "PC", "PS4"],
+      "genre": ["어드벤처", "비주얼 노벨"],
+      "release_date": "2024-01-25",
+      "developer": "Capcom",
+      "publisher": "Capcom",
+      "search_count": 0
+    },
+    {
+      "name": "백영웅전",
+      "tag": "백영웅전",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["RPG", "JRPG"],
+      "release_date": "2024-04-23",
+      "developer": "Rabbit & Bear Studios",
+      "publisher": "505 Games",
+      "search_count": 0
+    },
+    {
+      "name": "배트맨: 아캄 트릴로지",
+      "tag": "배트맨아캄",
+      "platform": ["Nintendo Switch"],
+      "genre": ["액션 어드벤처"],
+      "release_date": "2023-12-01",
+      "developer": "Rocksteady Studios",
+      "publisher": "Warner Bros. Games",
+      "search_count": 0
+    },
+    {
+      "name": "메탈 기어 솔리드: 마스터 컬렉션 Vol.1",
+      "tag": "메기솔",
+      "platform": ["Nintendo Switch", "PC", "PS5"],
+      "genre": ["잠입", "액션"],
+      "release_date": "2023-10-24",
+      "developer": "Konami",
+      "publisher": "Konami",
+      "search_count": 0
+    },
+    {
+      "name": "EA SPORTS FC 24",
+      "tag": "FC24",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["스포츠", "축구"],
+      "release_date": "2023-09-29",
+      "developer": "EA Vancouver & EA Romania",
+      "publisher": "Electronic Arts",
+      "search_count": 0
+    },
+    {
+      "name": "저스트 댄스 2024 에디션",
+      "tag": "저스트댄스",
+      "platform": ["Nintendo Switch", "PS5", "Xbox Series X/S"],
+      "genre": ["리듬", "댄스"],
+      "release_date": "2023-10-24",
+      "developer": "Ubisoft Paris",
+      "publisher": "Ubisoft",
+      "search_count": 0
+    },
+    {
+      "name": "태고의 달인 Nintendo Switch 버~전!",
+      "tag": "태고의달인",
+      "platform": ["Nintendo Switch"],
+      "genre": ["리듬"],
+      "release_date": "2018-07-19",
+      "developer": "Bandai Namco Studios",
+      "publisher": "Bandai Namco Entertainment",
+      "search_count": 0
+    },
+    {
+      "name": "마리오 + 래비드 반짝이는 희망",
+      "tag": "마리오래비드",
+      "platform": ["Nintendo Switch"],
+      "genre": ["전략 RPG"],
+      "release_date": "2022-10-20",
+      "developer": "Ubisoft Milan",
+      "publisher": "Ubisoft",
+      "search_count": 0
+    },
+    {
+      "name": "오버쿡! 2",
+      "tag": "오버쿡2",
+      "platform": ["Nintendo Switch", "PC"],
+      "genre": ["시뮬레이션", "파티게임"],
+      "release_date": "2018-08-07",
+      "developer": "Ghost Town Games",
+      "publisher": "Team17",
+      "search_count": 0
+    },
+    {
+      "name": "오버쿡! 올유캔잇",
+      "tag": "오버쿡올유캔잇",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["시뮬레이션", "파티게임"],
+      "release_date": "2021-03-23",
+      "developer": "Ghost Town Games",
+      "publisher": "Team17",
+      "search_count": 0
+    },
+    {
+      "name": "잇 테이크 투",
+      "tag": "잇테이크투",
+      "platform": ["Nintendo Switch", "PC", "PS4", "PS5"],
+      "genre": ["액션 어드벤처", "협동"],
+      "release_date": "2022-11-04",
+      "developer": "Hazelight Studios",
+      "publisher": "Electronic Arts",
+      "search_count": 0
+    },
+    {
+      "name": "휴먼: 폴 플랫",
+      "tag": "휴먼폴플랫",
+      "platform": ["Nintendo Switch", "PC", "PS4"],
+      "genre": ["퍼즐", "플랫포머"],
+      "release_date": "2017-12-07",
+      "developer": "No Brakes Games",
+      "publisher": "Curve Digital",
+      "search_count": 0
+    }
+  ]
+  

@@ -1,103 +1,228 @@
-import Image from "next/image";
+"use client";
+import React from "react";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Home, Share2, Search } from "lucide-react";
+import PriceDisplay from "@/components/PriceDisplay";
 
-export default function Home() {
+// 대시보드 데이터 타입
+interface DashboardGame {
+  name: string;
+  min: number;
+  avg: number;
+  max: number;
+  recommend: number;
+  searchCount?: number;
+  changeRate?: number;
+}
+
+interface DashboardData {
+  popularGames: DashboardGame[];
+  risingGames: DashboardGame[];
+  fallingGames: DashboardGame[];
+}
+
+export default function MainPage() {
+  const router = useRouter();
+  const [search, setSearch] = React.useState("");
+  const [gameList, setGameList] = React.useState<any[]>([]);
+  const [filteredGames, setFilteredGames] = React.useState<any[]>([]);
+  const [showDropdown, setShowDropdown] = React.useState(false);
+  const [dashboardData, setDashboardData] = React.useState<DashboardData | null>(null);
+  const [loading, setLoading] = React.useState(true);
+
+  // 게임 리스트와 대시보드 데이터 불러오기 (최초 1회)
+  React.useEffect(() => {
+    Promise.all([
+      fetch("/api/games").then(res => res.json()),
+      fetch("/api/dashboard").then(res => res.json())
+    ]).then(([gamesData, dashboardData]) => {
+      setGameList(gamesData);
+      setDashboardData(dashboardData);
+      setLoading(false);
+    }).catch(error => {
+      console.error('데이터 로딩 실패:', error);
+      setLoading(false);
+    });
+  }, []);
+
+  // 검색 입력 시 자동완성 후보 필터링
+  React.useEffect(() => {
+    if (!search.trim()) {
+      setFilteredGames([]);
+      setShowDropdown(false);
+      return;
+    }
+    const q = search.trim().toLowerCase();
+    const filtered = gameList.filter((g: any) =>
+      g.name?.toLowerCase().includes(q) || g.tag?.toLowerCase().includes(q)
+    );
+    setFilteredGames(filtered);
+    setShowDropdown(filtered.length > 0);
+  }, [search, gameList]);
+
+  // ESC/바깥 클릭으로 드롭다운 닫기
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowDropdown(false);
+    };
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(".search-autocomplete-container")) setShowDropdown(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!search.trim()) return;
+    
+    // 상세페이지로 이동
+    router.push(`/game/${encodeURIComponent(search.trim())}`);
+  };
+
+  const handleGameSelect = (gameName: string) => {
+    setSearch(gameName);
+    setShowDropdown(false);
+    router.push(`/game/${encodeURIComponent(gameName)}`);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen bg-[#f9fafb] flex flex-col items-center py-10 px-2">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <h1 className="text-3xl font-bold text-[#222] mb-2 tracking-tight">껨값</h1>
+        <p className="text-gray-500 mb-6 text-base leading-relaxed">중고거래 눈탱이, 치지도 말고 맞지도 말자 👊</p>
+        
+        <form onSubmit={handleSearch} className="flex gap-2 mb-6 search-autocomplete-container relative">
+          <Input
+            className="flex-1 h-12 text-lg bg-[#f5f6fa] border-none focus:ring-2 focus:ring-[#3182f6]"
+            placeholder="게임명을 입력하세요"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            autoComplete="off"
+            onFocus={() => { if (filteredGames.length > 0) setShowDropdown(true); }}
+          />
+          <button
+            type="submit"
+            className="bg-[#3182f6] text-white font-bold rounded-lg px-5 h-12 text-lg shadow-sm hover:bg-[#2563eb] transition flex items-center gap-2"
+          >
+            <Search className="w-5 h-5" />
+            검색
+          </button>
+          {showDropdown && filteredGames.length > 0 && (
+            <ul className="absolute top-14 left-0 w-full bg-white border rounded shadow z-10 max-h-60 overflow-y-auto">
+              {filteredGames.map((g, idx) => (
+                <li
+                  key={g.id}
+                  className="px-3 py-2 hover:bg-blue-100 cursor-pointer text-sm"
+                  onClick={() => handleGameSelect(g.name)}
+          >
+                  <div className="font-semibold">{g.name}</div>
+                  {g.tag && <div className="text-gray-500">{g.tag}</div>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </form>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        {/* 대시보드 섹션 */}
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">로딩 중...</div>
+        ) : dashboardData ? (
+          <>
+            {/* 많이 찾은 게임 */}
+            <div className="mb-7">
+              <div className="text-lg font-extrabold text-[#2563eb] mb-3 pl-1 tracking-tight">
+                많이 찾은 게임
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+              {dashboardData.popularGames.map((game: DashboardGame) => (
+                <Link
+                  key={game.name}
+                  href={`/game/${encodeURIComponent(game.name)}`}
+                  className="block rounded-xl border border-gray-200 bg-[#f5f6fa] p-4 mb-3 shadow-sm hover:bg-[#e8f3ff] transition"
+                >
+                  <div className="text-lg font-bold text-[#222] mb-2">{game.name}</div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <div className="text-blue-600">최저가<br /><span className="font-bold text-base">{game.min.toLocaleString()}원</span></div>
+                    <div className="text-gray-600">평균가<br /><span className="font-bold text-base">{game.avg.toLocaleString()}원</span></div>
+                    <div className="text-red-500">최고가<br /><span className="font-bold text-base">{game.max.toLocaleString()}원</span></div>
+                  </div>
+                  <div className="mt-2 bg-[#e8f3ff] rounded-lg py-2 text-center text-[#3182f6] font-bold text-base tracking-tight">
+                    추천 껨값 <span className="text-2xl">{game.recommend.toLocaleString()}원</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* 떡상중인 타이틀 */}
+            <div className="mb-7">
+              <div className="text-lg font-extrabold text-[#2563eb] mb-3 pl-1 tracking-tight">
+                떡상중인 타이틀
+              </div>
+              {dashboardData.risingGames.map((game: DashboardGame) => (
+                <Link
+                  key={game.name}
+                  href={`/game/${encodeURIComponent(game.name)}`}
+                  className="block rounded-xl border border-gray-200 bg-[#f5f6fa] p-4 mb-3 shadow-sm hover:bg-[#e8f3ff] transition"
+                >
+                  <div className="text-lg font-bold text-[#222] mb-2 flex items-center justify-between">
+                    {game.name}
+                    <span className="text-green-600 text-sm font-bold">+{game.changeRate}%</span>
+                  </div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <div className="text-blue-600">최저가<br /><span className="font-bold text-base">{game.min.toLocaleString()}원</span></div>
+                    <div className="text-gray-600">평균가<br /><span className="font-bold text-base">{game.avg.toLocaleString()}원</span></div>
+                    <div className="text-red-500">최고가<br /><span className="font-bold text-base">{game.max.toLocaleString()}원</span></div>
+                  </div>
+                  <div className="mt-2 bg-[#e8f3ff] rounded-lg py-2 text-center text-[#3182f6] font-bold text-base tracking-tight">
+                    추천 껨값 <span className="text-2xl">{game.recommend.toLocaleString()}원</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* 떡락중인 타이틀 */}
+            <div className="mb-7">
+              <div className="text-lg font-extrabold text-[#2563eb] mb-3 pl-1 tracking-tight">
+                떡락중인 타이틀
+              </div>
+              {dashboardData.fallingGames.map((game: DashboardGame) => (
+                <Link
+                  key={game.name}
+                  href={`/game/${encodeURIComponent(game.name)}`}
+                  className="block rounded-xl border border-gray-200 bg-[#f5f6fa] p-4 mb-3 shadow-sm hover:bg-[#e8f3ff] transition"
+                >
+                  <div className="text-lg font-bold text-[#222] mb-2 flex items-center justify-between">
+                    {game.name}
+                    <span className="text-red-600 text-sm font-bold">{game.changeRate}%</span>
+                  </div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <div className="text-blue-600">최저가<br /><span className="font-bold text-base">{game.min.toLocaleString()}원</span></div>
+                    <div className="text-gray-600">평균가<br /><span className="font-bold text-base">{game.avg.toLocaleString()}원</span></div>
+                    <div className="text-red-500">최고가<br /><span className="font-bold text-base">{game.max.toLocaleString()}원</span></div>
+                  </div>
+                  <div className="mt-2 bg-[#e8f3ff] rounded-lg py-2 text-center text-[#3182f6] font-bold text-base tracking-tight">
+                    추천 껨값 <span className="text-2xl">{game.recommend.toLocaleString()}원</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-8 text-gray-500">데이터를 불러올 수 없습니다.</div>
+        )}
+      </div>
+
+      {/* 가격 정보 섹션 */}
+      <div className="w-full max-w-6xl mt-8">
+        <PriceDisplay />
+      </div>
+    </main>
   );
 }

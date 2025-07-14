@@ -1,0 +1,90 @@
+import { NextRequest } from "next/server";
+import { spawn } from "child_process";
+import path from "path";
+
+export async function POST(req: NextRequest) {
+  try {
+    const { game } = await req.json();
+    if (!game) {
+      return Response.json({ error: "게임명이 필요합니다." }, { status: 400 });
+    }
+    
+    console.log(`크롤링 시작: ${game}`);
+    
+    // 크롤러 실행
+    const result = await runCrawler(game);
+    
+    if (!result.success) {
+      return Response.json({ error: result.error || "크롤링에 실패했습니다." }, { status: 500 });
+    }
+    
+    // 크롤링 결과 반환
+    return Response.json({
+      game,
+      count: result.count || 0,
+      min_price: result.min_price || 0,
+      avg_price: result.avg_price || 0,
+      max_price: result.max_price || 0,
+      median_price: result.median_price || 0,
+      items: result.items || [],
+      price_ranges: result.price_ranges || {},
+      success: true
+    });
+    
+  } catch (error) {
+    console.error("크롤링 API 에러:", error);
+    return Response.json({ error: "크롤링 중 오류가 발생했습니다." }, { status: 500 });
+  }
+}
+
+function runCrawler(game: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const crawlerPath = path.join(process.cwd(), "crawler", "bunjang.js");
+    const child = spawn("node", [crawlerPath, game], {
+      cwd: path.join(process.cwd(), "crawler"),
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, NODE_ENV: "production" }
+    });
+    
+    let output = "";
+    let errorOutput = "";
+    
+    child.stdout.on("data", (data) => {
+      output += data.toString();
+    });
+    
+    child.stderr.on("data", (data) => {
+      errorOutput += data.toString();
+    });
+    
+    child.on("close", (code) => {
+      if (code === 0) {
+        // 크롤러 출력에서 결과 파싱 시도
+        try {
+          // 크롤러가 JSON 형태로 결과를 출력했다면 파싱
+          const lines = output.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('RESULT:')) {
+              const jsonStr = line.substring(7);
+              const result = JSON.parse(jsonStr);
+              resolve(result);
+              return;
+            }
+          }
+          // JSON 결과가 없으면 기본 성공 응답
+          resolve({ success: true });
+        } catch (e) {
+          resolve({ success: true });
+        }
+      } else {
+        reject(new Error(`크롤러 실행 실패 (코드: ${code}): ${errorOutput}`));
+      }
+    });
+    
+    // 60초 타임아웃
+    setTimeout(() => {
+      child.kill();
+      reject(new Error("크롤링 타임아웃"));
+    }, 60000);
+  });
+} 
